@@ -151,6 +151,54 @@ const examples = {
       }
     }
   });
+  `,
+  adAccount: `
+  const fetchMachine = Machine({
+    id: 'draft',
+    initial: 'DRAFT',
+    context: {
+      paymentType: 'POSTPAID'
+    },
+    states: {
+      DRAFT: {
+        on: {
+          SAVE: 'DRAFT',
+          REQUEST: 'IN_REVIEW',
+        }
+      },
+      IN_REVIEW: {
+        on: {
+          APPROVE: {
+            target: 'APPROVED',
+            cond: 'isPrepaid'
+          },
+          ON_HOLD: 'DRAFT',
+          REJECT: 'REJECTED',
+          SEND_FOR_BIZFIN: {
+            target: 'PAYMENT_IN_REVIEW',
+            cond: 'isPostpaid'
+          }
+        }
+      },
+      PAYMENT_IN_REVIEW: {
+        on: {
+          REJECT: 'IN_REVIEW',
+          APPROVE: 'APPROVED'
+        }
+      },
+      REJECTED: {
+          type: 'final'
+      },
+      APPROVED: {
+          type: 'final'
+      }
+    }
+  }, {
+    guards: {
+      isPrepaid: context => context.paymentType === 'PREPAID',
+      isPostpaid: context => context.paymentType !== 'PREPAID',
+    }
+  })
   `
 };
 

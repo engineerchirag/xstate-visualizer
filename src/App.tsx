@@ -260,7 +260,7 @@ const appMachine = Machine<AppMachineContext>(
       token: undefined,
       // token: process.env.REACT_APP_TEST_TOKEN,
       gist: undefined,
-      machine: examples.basic,
+      machine: examples.adAccount,
       user: undefined
     },
     invoke: [
@@ -296,7 +296,7 @@ const appMachine = Machine<AppMachineContext>(
                 {
                   target: 'unauthorized',
                   actions: assign<AppMachineContext>({
-                    machine: examples.basic
+                    machine: examples.adAccount
                   })
                 }
               ]
