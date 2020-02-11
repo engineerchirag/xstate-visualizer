@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { EventObject, State, Interpreter, Machine, assign } from 'xstate';
+import { State, Interpreter, Machine, assign } from 'xstate';
 import AceEditor from 'react-ace';
 import { isBuiltInEvent } from './utils';
 import styled from 'styled-components';
@@ -175,7 +175,7 @@ export const EventPanel: React.FunctionComponent<{
   }, [eventsRef.current, records.length]);
 
   const sendToService = useCallback(
-    (eventOrJSON: string | EventObject) => {
+    (eventOrJSON: string | any) => {
       let event = eventOrJSON;
 
       if (typeof eventOrJSON === 'string') {
@@ -191,7 +191,7 @@ export const EventPanel: React.FunctionComponent<{
         }
       }
 
-      if (!isBuiltInEvent((event as EventObject).type)) {
+      if (!isBuiltInEvent((event as any).type)) {
         service.send(event);
       }
     },

@@ -37,15 +37,6 @@ export function Header() {
         <StyledLink href="https://xstate.js.org/docs" target="_xstate-docs">
           Docs
         </StyledLink>
-        <StyledLink
-          href="https://spectrum.chat/statecharts"
-          target="_statecharts-community"
-        >
-          Community
-        </StyledLink>
-        <StyledLink href="https://opencollective.com/xstate" target="_sponsor">
-          Sponsor 💙
-        </StyledLink>
       </StyledLinks>
     </StyledHeader>
   );

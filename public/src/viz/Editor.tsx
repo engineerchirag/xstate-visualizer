@@ -25,7 +25,7 @@ export const StyledEditor = styled.div`
 
 export const StyledButtons = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   grid-column-gap: 1rem;
 `;
 
@@ -69,37 +69,6 @@ export const Editor: React.FunctionComponent<EditorProps> = props => {
           onClick={() => onChange(code)}
         >
           {changeText}
-        </StyledButton>
-        <StyledButton
-          data-variant="primary"
-          disabled={isSaving || state.matches({ auth: 'pendingAuthorization' })}
-          onClick={() => {
-            onChange(code);
-            onSave(code);
-          }}
-        >
-          {state.matches({
-            auth: { authorized: { gist: 'patching' } }
-          })
-            ? 'Saving...'
-            : state.matches({
-                auth: { authorized: { gist: 'posting' } }
-              })
-            ? 'Uploading...'
-            : state.matches({
-                auth: { authorized: { gist: { idle: 'patched' } } }
-              })
-            ? 'Saved!'
-            : state.matches({
-                auth: { authorized: { gist: { idle: 'posted' } } }
-              })
-            ? 'Uploaded!'
-            : state.matches({ auth: 'authorized' })
-            ? 'Save'
-            : !state.matches({ auth: 'authorized' }) &&
-              !state.matches({ auth: 'unauthorized' })
-            ? 'Logging in...'
-            : 'Login to save'}
         </StyledButton>
       </StyledButtons>
     </StyledEditor>

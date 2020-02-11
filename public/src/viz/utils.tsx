@@ -4,8 +4,7 @@ import {
   Edge,
   Action,
   ActionObject,
-  Guard,
-  EventObject
+  Guard
 } from 'xstate';
 
 export function isChildOf(

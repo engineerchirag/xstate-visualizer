@@ -469,7 +469,7 @@ export const StateChartNode: React.FC<StateChartNodeProps> = props => {
 
   useEffect(() => {
     tracker.update(props.stateNode.id, stateRef.current);
-  });
+  }, [props.stateNode.id]);
 
   useEffect(() => {
     tracker.updateAll();
@@ -499,7 +499,7 @@ export const StateChartNode: React.FC<StateChartNodeProps> = props => {
     ) {
       setTimerRestarts(timerRestarts + 1);
     }
-  }, [current]);
+  }, [current, stateNode.id, timerRestarts]);
 
   const isActive =
     !stateNode.parent || current.matches(stateNode.path.join('.')) || undefined;

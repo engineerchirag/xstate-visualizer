@@ -8,12 +8,13 @@
     "@types/jest": "23.3.9",
     "@types/node": "10.12.1",
     "@xstate/react": "^0.6.1",
+    "chokidar": "^3.3.1",
     "query-string": "^6.8.0",
     "react-scripts": "^3.0.1",
     "styled-components": "^4.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3015 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

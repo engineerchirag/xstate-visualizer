@@ -1,7 +1,7 @@
 import React, { Component, createContext, useState, useReducer } from 'react';
 import { StateChart, notificationsMachine, Notifications } from './index';
 import styled from 'styled-components';
-import { Machine, assign, EventObject, State, Interpreter } from 'xstate';
+import { Machine, assign, State, Interpreter } from 'xstate';
 import queryString from 'query-string';
 import { useMachine } from '@xstate/react';
 import { log, send } from 'xstate/lib/actions';
@@ -127,7 +127,7 @@ interface AppMachineContext {
   };
 }
 
-const invokeSaveGist = (ctx: AppMachineContext, e: EventObject) => {
+const invokeSaveGist = (ctx: AppMachineContext, e: any) => {
   return fetch(`https://api.github.com/gists/` + ctx.gist!.id, {
     method: 'post',
     body: JSON.stringify({
@@ -149,7 +149,7 @@ const invokeSaveGist = (ctx: AppMachineContext, e: EventObject) => {
   });
 };
 
-const invokePostGist = (ctx: AppMachineContext, e: EventObject) => {
+const invokePostGist = (ctx: AppMachineContext, e: any) => {
   return fetch(`https://api.github.com/gists`, {
     method: 'post',
     body: JSON.stringify({
@@ -252,6 +252,8 @@ const authActor = createAuthActor();
 
 const query = queryString.parse(window.location.search);
 
+
+
 const appMachine = Machine<AppMachineContext>(
   {
     id: 'app',
@@ -260,7 +262,7 @@ const appMachine = Machine<AppMachineContext>(
       token: undefined,
       // token: process.env.REACT_APP_TEST_TOKEN,
       gist: undefined,
-      machine: examples.adAccount,
+      machine: examples,
       user: undefined
     },
     invoke: [
@@ -296,7 +298,7 @@ const appMachine = Machine<AppMachineContext>(
                 {
                   target: 'unauthorized',
                   actions: assign<AppMachineContext>({
-                    machine: examples.adAccount
+                    machine: examples
                   })
                 }
               ]

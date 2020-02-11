@@ -4,7 +4,6 @@ import {
   Machine as _Machine,
   StateNode,
   State,
-  EventObject,
   Machine,
   assign,
   send,
@@ -21,7 +20,7 @@ import { CodePanel } from './CodePanel';
 import { raise } from 'xstate/lib/actions';
 import { getEdges } from 'xstate/lib/graph';
 import { notificationsActor } from './Header';
-import { useMachine, useService } from '@xstate/react';
+import { useService } from '@xstate/react';
 
 const StyledViewTab = styled.li`
   padding: 0 1rem;
@@ -118,7 +117,7 @@ interface StateChartProps {
 }
 
 export interface EventRecord {
-  event: EventObject;
+  event: any;
   time: number;
 }
 export interface StateChartState {
@@ -197,22 +196,44 @@ export const StateChart: React.FC<StateChartProps> = ({
 
   const service = useMemo(() => {
     return interpret(machine).start();
-  }, [machine, resetCount]);
+  }, [machine]);
 
   const [current] = useService(service);
 
-  useEffect(() => {
-    const formattedEvent = {
-      event: current.event,
-      time: Date.now()
-    };
+  // useEffect(() => {
+  //   const formattedEvent = {
+  //     event: current.event,
+  //     time: Date.now()
+  //   };
 
-    setEvents(events.concat(formattedEvent));
-  }, [current]);
+  //   setEvents(events.concat(formattedEvent));
+  // }, [current.event, events]);
 
   const [allState, setState] = useState<StateChartState>(
     (() => {
       const _machine = toMachine(props.machine);
+      // keep a list of serialized functions
+      const fns: any = [];
+
+      // json replacer - returns a placeholder for functions
+      const jsonReplacer = function (key: any, val: any) {
+          if (typeof val === 'function') {
+            fns.push(val.toString());
+              
+              return "{func_" + (fns.length - 1) + "}";
+          }
+              
+          return val;
+      };
+
+      // regex replacer - replaces placeholders with functions
+      const funcReplacer = function (match: any, id: any) {
+        return fns[id];
+      };
+
+      const result = JSON
+          .stringify(_machine.options, jsonReplacer)               // generate json with placeholders
+          .replace(/"\{func_(\d+)\}"/g, funcReplacer); 
 
       return {
         preview: undefined,
@@ -222,14 +243,14 @@ export const StateChart: React.FC<StateChartProps> = ({
         code:
           typeof _machine === 'string'
             ? _machine
-            : `Machine(${JSON.stringify(_machine.config, null, 2)})`,
+            : `Machine(${JSON.stringify(_machine.config, null, 2)}, ${result})`,
         toggledStates: {},
         events: []
       };
     })()
   );
 
-  function renderView(current: State<any, any>, service: Interpreter<any, any, EventObject>) {
+  function renderView(current: State<any, any>, service: Interpreter<any, any, any>) {
     const { view, code } = allState;
 
     switch (view) {
